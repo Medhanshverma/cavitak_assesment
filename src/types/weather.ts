@@ -12,6 +12,13 @@ export interface WeatherData {
   wind: {
     speed: number;
   };
+  sys: {
+    sunrise: number;
+    sunset: number;
+    country: string;
+  };
+  timezone: number; 
+  dt: number; 
 }
 
 export interface ApiError {

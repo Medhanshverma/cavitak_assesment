@@ -3,6 +3,12 @@ interface ErrorMessageProps {
 }
 
 export default function ErrorMessage({ message }: ErrorMessageProps) {
+  // Parse the message to extract icon, title, and description
+  const lines = message.split('\n');
+  const icon = lines[0] || '⚠️';
+  const title = lines[1] || 'Something went wrong';
+  const description = lines[2] || message;
+
   return (
     <div style={{ 
       color: '#721c24', 
@@ -20,7 +26,7 @@ export default function ErrorMessage({ message }: ErrorMessageProps) {
         fontSize: '24px',
         flexShrink: 0
       }}>
-        ⚠️
+        {icon}
       </div>
       <div>
         <div style={{ 
@@ -28,13 +34,13 @@ export default function ErrorMessage({ message }: ErrorMessageProps) {
           marginBottom: '4px',
           fontSize: '16px'
         }}>
-          Something went wrong
+          {title}
         </div>
         <div style={{ 
           fontSize: '14px',
           opacity: 0.9
         }}>
-          {message}
+          {description}
         </div>
       </div>
     </div>

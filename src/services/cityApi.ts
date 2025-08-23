@@ -11,7 +11,8 @@ export interface CityData {
 
 export const fetchCitySuggestions = async (query: string): Promise<CityData[]> => {
   if (!API_KEY) {
-    throw new Error('API key is not configured');
+    console.warn('API key is not configured for city suggestions');
+    return [];
   }
 
   if (query.length < 3) {
@@ -24,6 +25,17 @@ export const fetchCitySuggestions = async (query: string): Promise<CityData[]> =
     const response = await fetch(url);
     
     if (!response.ok) {
+      // Handle specific error cases silently for city suggestions
+      if (response.status === 401 || response.status === 402 || response.status === 403) {
+        console.warn('API authentication issue for city suggestions');
+        return [];
+      } else if (response.status === 404) {
+        console.warn('No cities found for query:', query);
+        return [];
+      } else if (response.status === 429) {
+        console.warn('Rate limit exceeded for city suggestions');
+        return [];
+      }
       return [];
     }
     

@@ -29,8 +29,44 @@ const getWeatherIcon = (condition: string, iconCode: string) => {
   return iconMap[iconCode] || '🌤️'; //default
 };
 
+//Function for local time
+const getLocalTime = (timezone: number) => {
+  const utcTime = new Date().getTime() + (new Date().getTimezoneOffset() * 60000);
+  const localTime = new Date(utcTime + (timezone * 1000));
+  
+  return localTime.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+};
+
+//Function for local date
+const getLocalDate = (timezone: number) => {
+  const utcTime = new Date().getTime() + (new Date().getTimezoneOffset() * 60000);
+  const localTime = new Date(utcTime + (timezone * 1000));
+  
+  return localTime.toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric'
+  });
+};
+
+// Function to determine if it is day or night
+const getDayNightStatus = (currentTime: number, sunrise: number, sunset: number, timezone: number) => {
+  const localCurrentTime = currentTime + timezone;
+  const localSunrise = sunrise + timezone;
+  const localSunset = sunset + timezone;
+  
+  return localCurrentTime >= localSunrise && localCurrentTime < localSunset ? 'day' : 'night';
+};
+
 export default function WeatherCard({ weather }: WeatherCardProps) {
   const weatherIcon = getWeatherIcon(weather.weather[0].main, weather.weather[0].icon);
+  const localTime = getLocalTime(weather.timezone);
+  const localDate = getLocalDate(weather.timezone);
+  const dayNightStatus = getDayNightStatus(weather.dt, weather.sys.sunrise, weather.sys.sunset, weather.timezone);
   
   return (
     <div style={{ 
@@ -110,11 +146,48 @@ export default function WeatherCard({ weather }: WeatherCardProps) {
           </span>
         </div>
 
+        {/* Local Time and Day/Night Status */}
+        <div style={{
+          textAlign: 'center',
+          marginBottom: '20px',
+          padding: '15px',
+          backgroundColor: 'rgba(255,255,255,0.5)',
+          borderRadius: '10px',
+          backdropFilter: 'blur(10px)'
+        }}>
+          <div style={{ 
+            fontSize: '18px', 
+            fontWeight: '600',
+            marginBottom: '5px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
+          }}>
+            <span>{dayNightStatus === 'day' ? '☀️' : '🌙'}</span>
+            <span>{localTime}</span>
+          </div>
+          <div style={{ 
+            fontSize: '14px', 
+            opacity: 0.8,
+            marginBottom: '5px'
+          }}>
+            {localDate}
+          </div>
+          <div style={{ 
+            fontSize: '12px', 
+            opacity: 0.7,
+            textTransform: 'capitalize'
+          }}>
+            {dayNightStatus === 'day' ? 'Day-time' : 'Night-time'} in {weather.name}
+          </div>
+        </div>
+
         {/* Weather Details Grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '20px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+          gap: '15px',
           marginTop: '20px'
         }}>
           <div style={{ 
@@ -168,6 +241,8 @@ export default function WeatherCard({ weather }: WeatherCardProps) {
               Wind Speed
             </div>
           </div>
+
+
         </div>
       </div>
     </div>

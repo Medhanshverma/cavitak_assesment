@@ -90,7 +90,7 @@ export default function SearchBar({ city, onCityChange, onSearch, loading }: Sea
           onChange={handleCityChange}
           placeholder="Search for a city..."
           style={{ 
-            padding: '16px 50px 16px 20px', 
+            padding: '16px 60px 16px 20px', 
             width: '100%', 
             marginBottom: '20px',
             border: '2px solid #e1e5e9',
@@ -113,18 +113,6 @@ export default function SearchBar({ city, onCityChange, onSearch, loading }: Sea
           }}
         />
         
-        {/* Search Icon */}
-        <div style={{
-          position: 'absolute',
-          right: '20px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          fontSize: '20px',
-          color: '#667eea',
-          pointerEvents: 'none'
-        }}>
-          🔍
-        </div>
       </div>
       
       {/* Dropdown for city suggestions */}
