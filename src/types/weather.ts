@@ -1,4 +1,3 @@
-// Types for Weather API
 export interface WeatherData {
   name: string;
   main: {

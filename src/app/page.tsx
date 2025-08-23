@@ -1,103 +1,103 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState } from 'react';
+import { fetchWeatherData } from '@/services/weatherApi';
+import { WeatherData } from '@/types/weather';
+
+export default function WeatherDashboard() {
+  const [city, setCity] = useState('');
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!city.trim()) return;
+
+    console.log('Starting search for:', city);
+    setLoading(true);
+    setError(null);
+    setWeather(null);
+
+    try {
+      const data = await fetchWeatherData(city);
+      console.log('Received weather data:', data);
+      setWeather(data);
+    } catch (err) {
+      console.log('Error occurred:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto', fontFamily: 'Arial, sans-serif' }}>
+      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>Weather Dashboard</h1>
+      
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          placeholder="Enter city name (e.g., London, Tokyo)"
+          style={{ 
+            padding: '12px', 
+            width: '100%', 
+            marginBottom: '15px',
+            border: '1px solid #ddd',
+            borderRadius: '6px',
+            fontSize: '16px'
+          }}
         />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+        <button 
+          type="submit" 
+          disabled={loading}
+          style={{ 
+            padding: '12px 24px',
+            backgroundColor: loading ? '#ccc' : '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: loading ? 'not-allowed' : 'pointer',
+            fontSize: '16px',
+            width: '100%'
+          }}
+        >
+          {loading ? 'Searching...' : 'Get Weather'}
+        </button>
+      </form>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {error && (
+        <div style={{ 
+          color: '#d32f2f', 
+          backgroundColor: '#ffebee', 
+          padding: '15px', 
+          borderRadius: '6px',
+          marginTop: '20px',
+          border: '1px solid #ffcdd2'
+        }}>
+          <strong>Error:</strong> {error}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      )}
+
+      {weather && (
+        <div style={{ 
+          backgroundColor: '#f8f9fa', 
+          padding: '20px', 
+          borderRadius: '8px',
+          marginTop: '20px',
+          border: '1px solid #dee2e6'
+        }}>
+          <h2 style={{ margin: '0 0 15px 0', color: '#333' }}>{weather.name}</h2>
+          <div style={{ display: 'grid', gap: '10px' }}>
+            <p><strong>Temperature:</strong> {Math.round(weather.main.temp)}°C</p>
+            <p><strong>Condition:</strong> {weather.weather[0].description}</p>
+            <p><strong>Humidity:</strong> {weather.main.humidity}%</p>
+            <p><strong>Wind Speed:</strong> {weather.wind.speed} m/s</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
