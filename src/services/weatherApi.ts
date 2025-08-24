@@ -24,8 +24,7 @@ export const fetchWeatherData = async (city: string): Promise<WeatherData> => {
     } catch (e) {
       errorData = { message: 'Unknown error' };
     }
-    
-    // Handle specific error cases with user-friendly messages
+
     if (response.status === 401) {
       throw new Error('⚠️\nSomething went wrong\nWeather service is temporarily unavailable. Please try again later.');
     } else if (response.status === 402) {

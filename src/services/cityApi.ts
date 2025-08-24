@@ -25,7 +25,6 @@ export const fetchCitySuggestions = async (query: string): Promise<CityData[]> =
     const response = await fetch(url);
     
     if (!response.ok) {
-      // Handle specific error cases silently for city suggestions
       if (response.status === 401 || response.status === 402 || response.status === 403) {
         console.warn('API authentication issue for city suggestions');
         return [];

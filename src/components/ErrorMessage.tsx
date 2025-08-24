@@ -3,7 +3,6 @@ interface ErrorMessageProps {
 }
 
 export default function ErrorMessage({ message }: ErrorMessageProps) {
-  // Parse the message to extract icon, title, and description
   const lines = message.split('\n');
   const icon = lines[0] || '⚠️';
   const title = lines[1] || 'Something went wrong';

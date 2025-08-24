@@ -34,7 +34,6 @@ test('should search for Indore and show Indore in weather card', async ({ page }
   await dropdownOption.waitFor({ state: 'visible', timeout: 5000 });
   await dropdownOption.click();
   await page.locator('.get-weather-btn').click();
-  // Wait for weather card heading
   await expect(page.locator('.weather-card-heading')).toBeVisible();
   await expect(page.locator('.weather-card-heading')).toHaveText(/Indore/i);
 });
@@ -42,8 +41,7 @@ test('should search for Indore and show Indore in weather card', async ({ page }
 test('should show city dropdown after entering 3 random letters', async ({ page }) => {
   const input = page.locator('.search-input');
   await input.fill('abc');
-  // Wait for dropdown to appear
-  const dropdown = page.locator('.city-suggestion');
-  await dropdown.waitFor({ state: 'visible', timeout: 5000 });
-  await expect(dropdown).toBeVisible();
+  await expect(page.locator('.city-suggestion').first()).toBeVisible();
+  const count = await page.locator('.city-suggestion').count();
+  expect(count).toBeGreaterThan(0);
 });
