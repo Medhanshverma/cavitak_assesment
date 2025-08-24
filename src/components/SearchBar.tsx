@@ -89,6 +89,7 @@ export default function SearchBar({ city, onCityChange, onSearch, loading }: Sea
           value={city}
           onChange={handleCityChange}
           placeholder="Search for a city..."
+          className="search-input"
           style={{ 
             padding: '16px 60px 16px 20px', 
             width: '100%', 
@@ -119,6 +120,7 @@ export default function SearchBar({ city, onCityChange, onSearch, loading }: Sea
       {showSuggestions && (
         <div 
           ref={dropdownRef}
+          className="city-dropdown"
           style={{
             position: 'absolute',
             top: '60px',
@@ -135,7 +137,7 @@ export default function SearchBar({ city, onCityChange, onSearch, loading }: Sea
           }}
         >
           {loadingSuggestions ? (
-            <div style={{ 
+            <div className="city-suggestion loading-suggestion" style={{ 
               padding: '20px', 
               color: '#666',
               textAlign: 'center',
@@ -151,6 +153,7 @@ export default function SearchBar({ city, onCityChange, onSearch, loading }: Sea
               <div
                 key={`${suggestion.name}-${suggestion.country}-${index}`}
                 onClick={() => handleSuggestionClick(suggestion)}
+                className="city-suggestion"
                 style={{
                   padding: '15px 20px',
                   cursor: 'pointer',
@@ -184,7 +187,7 @@ export default function SearchBar({ city, onCityChange, onSearch, loading }: Sea
               </div>
             ))
           ) : city.length >= 3 ? (
-            <div style={{ 
+            <div className="city-suggestion no-cities" style={{ 
               padding: '20px', 
               color: '#666',
               textAlign: 'center'
@@ -199,6 +202,7 @@ export default function SearchBar({ city, onCityChange, onSearch, loading }: Sea
       <button 
         type="submit" 
         disabled={loading}
+        className="get-weather-btn"
         style={{ 
           padding: '16px 32px',
           background: loading 

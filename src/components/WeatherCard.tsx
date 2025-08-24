@@ -105,7 +105,9 @@ export default function WeatherCard({ weather }: WeatherCardProps) {
               margin: '0 0 5px 0', 
               fontSize: '24px',
               fontWeight: '600'
-            }}>
+            }}
+            className="weather-card-heading"
+          >
               {weather.name}
             </h2>
             <p style={{ 
